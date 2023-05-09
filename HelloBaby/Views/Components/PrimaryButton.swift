@@ -10,10 +10,12 @@ import SwiftUI
 struct PrimaryButton: View {
     var icon: String
     var title: String
-    var action: () -> Void
+    var action: (() -> Void)? = nil
     
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            action?()
+        }) {
             HStack {
                 Image(systemName: icon)
                 Text(title)

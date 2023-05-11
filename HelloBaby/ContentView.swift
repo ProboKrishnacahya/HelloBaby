@@ -18,51 +18,63 @@ struct ContentView: View {
     var body: some View {
         // Wrapping the view in a NavigationStack for navigation purposes
         NavigationStack {
-            // Creating a Form to display the calculation form page
-            Form {
-                // LMP Date section
-                Section() {
+            ScrollView {
+                VStack(spacing: 16) {
+                    // LMP Date section
                     // DatePicker to select the LMP date
                     VStack(alignment:.leading, spacing: 16) {
                         Text("Last Menstrual Period Date")
                             .font(.title2.bold())
                         Text("Select Date:")
-                            .foregroundColor(.secondary)
-                        DatePicker("", selection: $lmpDate, displayedComponents: .date)
+                        DatePicker("Select Date:", selection: $lmpDate, displayedComponents: .date)
                             .datePickerStyle(.wheel)
                             .labelsHidden()
                             .padding(.horizontal)
+                        // Calculate button section
+                        PrimaryButton(icon: "arrow.right", title: "Calculate", action: calculateEDD)
                     }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(16)
                     
-                    // Calculate button section
-                    PrimaryButton(icon: "arrow.right", title: "Calculate", action: calculateEDD)
-                }
-                .listRowSeparator(.hidden)
-                
-                // EDD section
-                Section() {
+                    // EDD section
                     // DatePicker to display the calculated EDD date
-                    HStack {
+                    VStack(alignment:.center, spacing: 16) {
                         Image(systemName: "figure.2.and.child.holdinghands")
                             .font(.title)
-                        
-                        VStack(alignment: .leading) {
-                            Text("Estimated Delivery Date")
-                                .font(.title2.bold())
-                            Text("\(eddDate.formatted(date: .long, time: .omitted))")
-                                .foregroundColor(.secondary)
+                        Text("Estimated Delivery Date")
+                            .font(.title2.bold())
+                        Text("\(eddDate.formatted(date: .long, time: .omitted))")
+                            .padding(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(.secondary, lineWidth: 2)
+                            )
+                            .foregroundColor(.secondary)
+                            .bold()
+                        Text("Congratulations!! Your baby is predicted to be born on \(eddDate.formatted(date: .long, time: .omitted))")
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(16)
+                }
+                .navigationBarTitle("EDD Calculation")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            isSheetPresented.toggle()
+                        } label: {
+                            Label("Information", systemImage: "info.circle")
+                        }
+                        .foregroundColor(.indigo)
+                        .sheet(isPresented: $isSheetPresented) {
+                            SheetView()
                         }
                     }
-                    PrimaryButton(icon: "info.circle", title: "Information") {
-                        isSheetPresented.toggle()
-                    }
-                    .sheet(isPresented: $isSheetPresented) {
-                        SheetView()
-                    }
                 }
-                .listRowSeparator(.hidden)
+                .padding()
             }
-            .navigationBarTitle("EDD Calculation")
         }
     }
     

@@ -8,77 +8,77 @@
 import SwiftUI
 
 struct ContentView: View {
-    // State variables to store the selected LMP and EDD dates
     @State private var lmpDate = Date()
     @State private var eddDate = Date()
-    
-    // State variables to store Information icon active state
+    @State private var isCalculationPerformed = false
     @State private var isSheetPresented = false
     
     var body: some View {
-        // Wrapping the view in a NavigationStack for navigation purposes
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
-                    // LMP Date section
-                    // DatePicker to select the LMP date
-                    VStack(alignment:.leading, spacing: 16) {
-                        Text("Last Menstrual Period Date")
+                VStack(alignment: .center, spacing: 16) {
+                    VStack(alignment: .center, spacing: 16) {
+                        Text("Last Menstrual Period")
                             .font(.title2.bold())
                         Text("Select Date:")
                         DatePicker("Select Date:", selection: $lmpDate, displayedComponents: .date)
                             .datePickerStyle(.wheel)
                             .labelsHidden()
                             .padding(.horizontal)
-                        // Calculate button section
                         PrimaryButton(icon: "arrow.right", title: "Calculate", action: calculateEDD)
                     }
                     .padding()
                     .background(.ultraThinMaterial)
                     .cornerRadius(16)
                     
-                    // EDD section
-                    // DatePicker to display the calculated EDD date
-                    VStack(alignment:.center, spacing: 16) {
-                        Image(systemName: "figure.2.and.child.holdinghands")
-                            .font(.title)
-                        Text("Estimated Delivery Date")
-                            .font(.title2.bold())
-                        Text("\(eddDate.formatted(date: .long, time: .omitted))")
-                            .padding(8)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .stroke(.secondary, lineWidth: 2)
-                            )
-                            .foregroundColor(.secondary)
-                            .bold()
-                        Text("Congratulations!! Your baby is predicted to be born on \(eddDate.formatted(date: .long, time: .omitted))")
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(16)
-                }
-                .navigationBarTitle("EDD Calculation")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            isSheetPresented.toggle()
-                        } label: {
-                            Label("Information", systemImage: "info.circle")
+                    if isCalculationPerformed {
+                        VStack(alignment: .center, spacing: 16) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "calendar.circle")
+                                    .font(Font.system(size: 56))
+                                Text("Estimated Date of Delivery")
+                                    .font(.title2.bold())
+                            }
+                            VStack {
+                                Text("\(eddDate.formatted(date: .long, time: .omitted))")
+                                    .padding(8)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(lineWidth: 2)
+                                    )
+                                    .bold()
+                            }
+                            VStack(spacing: 16) {
+                                Text("Your baby is predicted to be born on\n**\(eddDate.formatted(date: .long, time: .omitted))**.")
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                Divider()
+                                Button {
+                                    isSheetPresented.toggle()
+                                } label: {
+                                    Label("Learn More", systemImage: "info.circle")
+                                }
+                                .foregroundColor(.indigo)
+                                .sheet(isPresented: $isSheetPresented) {
+                                    SheetView()
+                                }
+                            }
                         }
-                        .foregroundColor(.indigo)
-                        .sheet(isPresented: $isSheetPresented) {
-                            SheetView()
-                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(16)
                     }
                 }
+                .navigationBarTitle("Calculation")
                 .padding()
+            }
+            .onAppear {
+                isCalculationPerformed = false
             }
         }
     }
     
-    // Function to calculate the EDD date based on the selected LMP date
     func calculateEDD() {
         let calendar = Calendar.current
         let lmpComponents = calendar.dateComponents([.day, .month, .year], from: lmpDate)
@@ -99,30 +99,66 @@ struct ContentView: View {
         }
         
         eddDate = calendar.date(from: eddComponents) ?? Date()
+        
+        isCalculationPerformed = true
     }
-}
-
-struct SheetView: View {
-    @Environment(\.presentationMode) var presentationMode
     
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 4) {
-                Text("The Neagle Formula Method can be used to calculate gestational age based on the first day of the last 18 menstrual periods (LMP) to the date when the anamnesis was performed taking into account the gestational age lasting 280 days (40 weeks). Gestational age is determined in weeks. In addition, it can also estimate the estimated day of delivery / birth (EDD). However, this formula can only be used for women whose menstrual cycles are regular.\n\nMeanwhile, steps to calculate the Estimated Day of Birth (EDD), namely:")
-                VStack(spacing: 4) {
-                    Text("1. If the LMP is in January and mid-March (before the 25th) = +7 +9 +0\nExample: LMP 6 January 2013 = 6 / 1 / 2013 = +7 +9 +0 -> So the EDD = 13 / 10 / 2013 (13 Oct 2013)")
+    struct SheetView: View {
+        @Environment(\.presentationMode) var presentationMode
+        
+        var body: some View {
+            NavigationStack {
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("About Formula")
+                            .font(.title3.bold())
+                        Text("The Neagle Formula Method can be used to calculate gestational age based on normal gestational age, namely 280 days (40 weeks or 9 months 7 days) calculated from the first day of the LMP (Last Menstrual Period) Date and not more than 300 days (43 weeks). Gestational age is determined in weeks. In addition, it can also predict the EDD (Estimated Date of Delivery). However, this formula can only be used for women whose menstrual cycles are regular.")
+                            .foregroundColor(.secondary)
+                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Calculation Steps")
+                            .font(.title3.bold())
+                        Text("Based on LMP Date")
+                            .fontWeight(.semibold)
+                        VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("1. January until mid-March (Before the 25th):")
+                                Text("Day + 7 / Month + 9 / Year + 0")
+                                    .padding(8)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(lineWidth: 2)
+                                    )
+                                    .bold()
+                                Text("Example: LMP on February 2, 2023\n2 / 2 / 2023 + 7 / 9 / 0 = 9 / 11 / 2023\nSo, the EDD is **November 9, 2023**.")
+                                    .foregroundColor(.secondary)
+                            }
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("2. From the 25th March until late December:")
+                                Text("Day + 7 / Month - 3 / Year + 1")
+                                    .padding(8)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(lineWidth: 2)
+                                    )
+                                    .bold()
+                                Text("Example: LMP on June 11, 2023\n11 / 6 / 2023 + 7 / (-3) / 1 = 18 / 3 / 2024\nSo, the EDD is **March 18, 2024**.")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                         .padding(.leading, 16)
-                    Text("2. If the LMP is later than mid-March (From the 25th and beyond) and so on until the end of December = +7 -3 +1\nExample: LMP 8 July 2013 = 8/7/2013 = +7 -3 +1 -> So EDD = 15/4/2014 (15 Apr 2014)")
-                        .padding(.leading, 16)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                .navigationBarItems(
+                    trailing: Button("Done", action: {
+                        presentationMode.wrappedValue.dismiss()
+                    })
+                    .foregroundColor(.indigo))
+                .navigationTitle("Neagle Formula Method")
+                .navigationBarTitleDisplayMode(.inline)
+                .padding()
             }
-            .navigationBarItems(trailing: Button("Done", action: {
-                presentationMode.wrappedValue.dismiss()
-            }).foregroundColor(.indigo))
-            .navigationTitle("Neagle Formula Method")
-            .navigationBarTitleDisplayMode(.inline)
-            .padding()
         }
     }
 }

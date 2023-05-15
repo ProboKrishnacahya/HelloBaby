@@ -12,6 +12,7 @@
 		82698CF22A04D1E00077405A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82698CF12A04D1E00077405A /* Assets.xcassets */; };
 		82698CF52A04D1E00077405A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82698CF42A04D1E00077405A /* Preview Assets.xcassets */; };
 		82698D022A04F8DD0077405A /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82698D012A04F8DD0077405A /* PrimaryButton.swift */; };
+		82B4B04C2A128604002A9547 /* CalculationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4B04B2A128604002A9547 /* CalculationPage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		82698CF12A04D1E00077405A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82698CF42A04D1E00077405A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		82698D012A04F8DD0077405A /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+		82B4B04B2A128604002A9547 /* CalculationPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationPage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,9 +83,18 @@
 		82698CFE2A04EE0B0077405A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				82B4B04A2A1285E8002A9547 /* Pages */,
 				82698CFC2A04ED330077405A /* Components */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		82B4B04A2A1285E8002A9547 /* Pages */ = {
+			isa = PBXGroup;
+			children = (
+				82B4B04B2A128604002A9547 /* CalculationPage.swift */,
+			);
+			path = Pages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,6 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82B4B04C2A128604002A9547 /* CalculationPage.swift in Sources */,
 				82698CF02A04D1DF0077405A /* ContentView.swift in Sources */,
 				82698CEE2A04D1DF0077405A /* HelloBabyApp.swift in Sources */,
 				82698D022A04F8DD0077405A /* PrimaryButton.swift in Sources */,
@@ -290,6 +302,7 @@
 				DEVELOPMENT_TEAM = Z8X59S7SCX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -319,6 +332,7 @@
 				DEVELOPMENT_TEAM = Z8X59S7SCX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

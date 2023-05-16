@@ -6,6 +6,13 @@
 //
 
 import SwiftUI
+extension DateFormatter {
+    static let shortDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        return formatter
+    }()
+}
 
 struct CalculationPage: View {
     @State private var lmpDate = Date()
@@ -13,27 +20,60 @@ struct CalculationPage: View {
     @State private var isCalculationPerformed = false
     @State private var isSheetPresented = false
     
+    private var dayComponent: String {
+        let calendar = Calendar.current
+        let day = calendar.component(.day, from: lmpDate)
+        return String(day)
+    }
+    
+    private var monthComponent: String {
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: lmpDate)
+        return String(month)
+    }
+    
+    private var yearComponent: String {
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: lmpDate)
+        return String(year)
+    }
+    
     func calculateEDD() {
         let calendar = Calendar.current
         let lmpComponents = calendar.dateComponents([.day, .month, .year], from: lmpDate)
         
-        let day = lmpComponents.day ?? 0
-        let month = lmpComponents.month ?? 0
-        let year = lmpComponents.year ?? 0
+        guard let day = lmpComponents.day,
+              let month = lmpComponents.month,
+              let year = lmpComponents.year else {
+            return
+        }
         
         var eddComponents = DateComponents()
-        if month <= 3 || (month == 3 && day < 25) {
-            eddComponents.day = day + 7
-            eddComponents.month = month + 9
-            eddComponents.year = year
+        if month >= 1 && month <= 3 {
+            // January to March
+            if month == 3 && day >= 25 {
+                // After March 24
+                eddComponents.day = day + 7
+                eddComponents.month = month - 3
+                eddComponents.year = year + 1
+            } else {
+                // January or February, or March 1-24
+                eddComponents.day = day + 7
+                eddComponents.month = month + 9
+                eddComponents.year = year
+            }
         } else {
+            // April to December
             eddComponents.day = day + 7
             eddComponents.month = month - 3
             eddComponents.year = year + 1
         }
         
-        eddDate = calendar.date(from: eddComponents) ?? Date()
+        guard let calculatedEDDDate = calendar.date(from: eddComponents) else {
+            return
+        }
         
+        eddDate = calculatedEDDDate
         isCalculationPerformed = true
     }
     
@@ -45,10 +85,7 @@ struct CalculationPage: View {
                         Text("Last Menstrual Period")
                             .font(.title2.bold())
                         Text("Select Date:")
-                        DatePicker("Select Date:", selection: $lmpDate, displayedComponents: .date)
-                            .datePickerStyle(.wheel)
-                            .labelsHidden()
-                            .padding(.horizontal)
+                        DatePickerView(selectedDate: $lmpDate)
                         PrimaryButton(icon: "arrow.right", title: "Calculate", action: calculateEDD)
                     }
                     .padding()
@@ -63,26 +100,34 @@ struct CalculationPage: View {
                                 Text("Estimated Date of Delivery")
                                     .font(.title2.bold())
                             }
-                            VStack {
-                                Text("\(eddDate.formatted(date: .long, time: .omitted))")
-                                    .padding(8)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 4)
-                                            .stroke(lineWidth: 2)
-                                    )
-                                    .bold()
-                            }
                             VStack(spacing: 16) {
+                                VStack(spacing: 8) {
+                                    if(monthComponent <= "3" || (monthComponent == "3" && dayComponent < "25")) {
+                                        VStack(spacing: 8) {
+                                            Text("Day + 7 / Month + 9 / Year + 0")
+                                            Text("\(dayComponent) + 7 / \(monthComponent) + 9 / \(yearComponent) + 0")
+                                        }
+                                    } else {
+                                        VStack(spacing: 8) {
+                                            Text("Day + 7 / Month - 3 / Year + 1")
+                                            Text("\(dayComponent) + 7 / \(monthComponent) - 3 / \(yearComponent) + 1")
+                                        }
+                                    }
+                                    Text("\(eddDate, formatter: DateFormatter.shortDateFormatter)")
+                                        .padding(8)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 4)
+                                                .stroke(lineWidth: 2)
+                                        )
+                                        .bold()
+                                }
                                 Text("Your baby is predicted to be born on\n**\(eddDate.formatted(date: .long, time: .omitted))**.")
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
                                 Divider()
-                                Button {
+                                TertiaryButton(icon: "info.circle", title: "Learn More") {
                                     isSheetPresented.toggle()
-                                } label: {
-                                    Label("Learn More", systemImage: "info.circle")
                                 }
-                                .foregroundColor(.indigo)
                                 .sheet(isPresented: $isSheetPresented) {
                                     SheetView()
                                 }

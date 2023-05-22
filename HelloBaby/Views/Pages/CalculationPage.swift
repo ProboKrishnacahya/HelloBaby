@@ -94,36 +94,36 @@ struct CalculationPage: View {
                     
                     if isCalculationPerformed {
                         VStack(alignment: .center, spacing: 16) {
-                            VStack(spacing: 4) {
+//                            VStack(spacing: 4) {
                                 Image(systemName: "calendar.circle")
                                     .font(Font.system(size: 56))
-                                Text("Estimated Date of Delivery")
-                                    .font(.title2.bold())
-                            }
+//                                Text("Estimated Date of Delivery")
+//                                    .font(.title2.bold())
+//                            }
                             VStack(spacing: 16) {
-                                VStack(spacing: 8) {
-                                    if(monthComponent <= "3" || (monthComponent == "3" && dayComponent < "25")) {
-                                        VStack(spacing: 8) {
-                                            Text("Day + 7 / Month + 9 / Year + 0")
-                                            Text("\(dayComponent) + 7 / \(monthComponent) + 9 / \(yearComponent) + 0")
-                                        }
-                                    } else {
-                                        VStack(spacing: 8) {
-                                            Text("Day + 7 / Month - 3 / Year + 1")
-                                            Text("\(dayComponent) + 7 / \(monthComponent) - 3 / \(yearComponent) + 1")
-                                        }
-                                    }
-                                    Text("\(eddDate, formatter: DateFormatter.shortDateFormatter)")
-                                        .padding(8)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .stroke(lineWidth: 2)
-                                        )
-                                        .bold()
-                                }
-                                Text("Your baby is predicted to be born on\n**\(eddDate.formatted(date: .long, time: .omitted))**.")
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
+//                                VStack(spacing: 8) {
+//                                    if(monthComponent <= "3" || (monthComponent == "3" && dayComponent < "25")) {
+//                                        VStack(spacing: 8) {
+//                                            Text("Day + 7 / Month + 9 / Year + 0")
+//                                            Text("\(dayComponent) + 7 / \(monthComponent) + 9 / \(yearComponent) + 0")
+//                                        }
+//                                    } else {
+//                                        VStack(spacing: 8) {
+//                                            Text("Day + 7 / Month - 3 / Year + 1")
+//                                            Text("\(dayComponent) + 7 / \(monthComponent) - 3 / \(yearComponent) + 1")
+//                                        }
+//                                    }
+//                                    Text("\(eddDate, formatter: DateFormatter.shortDateFormatter)")
+//                                        .padding(8)
+//                                        .overlay(
+//                                            RoundedRectangle(cornerRadius: 4)
+//                                                .stroke(lineWidth: 2)
+//                                        )
+//                                        .bold()
+//                                }
+                                Text("Your baby is predicted to be born on")
+                                Text("\(eddDate.formatted(date: .long, time: .omitted))")
+                                    .font(.title2.bold())
                                 Divider()
                                 TertiaryButton(icon: "info.circle", title: "Learn More") {
                                     isSheetPresented.toggle()
